@@ -1,13 +1,18 @@
 
 from flask import Flask, render_template, request, redirect
-#from gpiozero import LED
+from gpiozero import OutputDevice
 import os
 
-global isPowered
+RELAY_PIN = 8 # set this to relay pin
 
+global isPowered
 isPowered = True
 
 app = Flask(__name__)
+relay = OutputDevice(RELAY_PIN, active_high = False, initial_value = False)
+
+# set relay initially off, so device is initially on
+relay.off()
 
 dir = os.getcwd()
 
@@ -22,12 +27,8 @@ def handle_data():
 	global isPowered
 	isPowered = not isPowered
 
-	if isPowered:
-		print("Turning device on")
-		# turn gpio pin off, turning device on
-	else:
-		print("Turning device off")
-		# turn gpio pin on, turning device off
+	print("Toggling power to device")
+	relay.toggle()
 		
 	return redirect("/", code = 302)
 	
