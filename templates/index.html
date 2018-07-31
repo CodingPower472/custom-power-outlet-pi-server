@@ -2,10 +2,10 @@
 <html>
    <body>
 
-      <h1>{{ name }}!</h1>
+      <h1>{{ 'Status: On' if isPowered else 'Status: Off' }}!</h1>
 
       <form action="{{ url_for('handle_data') }}" method="post">
-        <input type="submit", value="{{ tname }}">
+        <input type="submit" value="{{ 'Turn Off' if isPowered else 'Turn On' }}">
       </form>
 
    </body>
