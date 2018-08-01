@@ -2,8 +2,17 @@
 from flask import Flask, render_template, redirect
 from gpiozero import OutputDevice
 import os
+import sys
 
-RELAY_PIN = 8 # set this to relay pin
+argv = sys.argv
+
+RELAY_PIN = 8 # default relay pin
+
+if argv.count > 2 and (argv[1] == '--pin' or argv[1] == '-p'):
+	try:
+		RELAY_PIN = int(argv[2])
+	except ValueError:
+		print('Warning: Can\'t parse pin as an integer, defaulting to %i' % RELAY_PIN)
 
 global isPowered
 isPowered = True
@@ -27,11 +36,11 @@ def handle_data():
 	global isPowered
 	isPowered = not isPowered
 
-	print("Toggling power to device")
+	print('Toggling power to device')
 	relay.toggle()
 		
 	return redirect("/", code = 302)
 	
 
-if __name__  == "__main__":
+if __name__  == '__main__':
 	app.run(debug=True)
