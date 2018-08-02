@@ -1,6 +1,5 @@
 
 from flask import Flask, render_template, redirect
-from gpiozero import OutputDevice
 import os
 import argparse
 from pyhap.accessory import Accessory
@@ -12,22 +11,10 @@ import signal
 
 RELAY_PIN = 8 # default relay pin
 
-"""
-if argv.count > 2 and (argv[1] == '--pin' or argv[1] == '-p'):
-	try:
-		RELAY_PIN = int(argv[2])
-	except ValueError:
-		print('Warning: Can\'t parse pin as an integer, defaulting to %i' % RELAY_PIN)
-"""
-
 global isPowered
 isPowered = True
 
 app = Flask(__name__)
-relay = OutputDevice(RELAY_PIN, active_high = False, initial_value = False)
-
-# set relay initially off, so device is initially on
-relay.off()
 
 class HomekitDevice(Accessory):
 
@@ -35,8 +22,6 @@ class HomekitDevice(Accessory):
 
 	@classmethod
 	def _gpio_setup(_cls, pin):
-		relay = OutputDevice(RELAY_PIN, active_high = False, initial_value = False)
-		relay.off()
 		print("Setting up GPIO")
 
 	def __init__(self, *args, **kwargs):
@@ -57,10 +42,6 @@ class HomekitDevice(Accessory):
 
 	def set_bulb(self, value):
 		print("Setting bulb state to %s" % value)
-		if value:
-			relay.on()
-		else:
-			relay.off()
 
 	def stop(self):
 		super().stop()
@@ -85,7 +66,6 @@ def handle_data():
 	isPowered = not isPowered
 
 	print('Toggling power to device')
-	relay.toggle()
 		
 	return redirect("/", code = 302)
 	
