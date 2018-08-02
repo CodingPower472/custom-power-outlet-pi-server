@@ -1,6 +1,6 @@
 
 from flask import Flask, render_template, redirect
-# from gpiozero import OutputDevice
+from gpiozero import OutputDevice
 import os
 import argparse
 from pyhap.accessory import Accessory
