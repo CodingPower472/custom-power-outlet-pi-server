@@ -58,9 +58,9 @@ class HomekitDevice(Accessory):
 	def set_bulb(self, value):
 		print("Setting bulb state to %s" % value)
 		if value:
-			relay.on()
-		else:
 			relay.off()
+		else:
+			relay.on()
 
 	def stop(self):
 		super().stop()
