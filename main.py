@@ -30,7 +30,7 @@ class HomekitDevice(Accessory):
 		print("Initting")
 
 		serv_light = self.add_preload_service('Lightbulb')
-		self.char_on = serv_light.configure_char('On', setter_callback = self.set_bulb)
+		self.char_on = serv_light.configure_char('On', getter_callback = self.get_bulb, setter_callback = self.set_bulb)
 
 		self.pin = RELAY_PIN
 		self._gpio_setup(self.pin)
@@ -40,8 +40,13 @@ class HomekitDevice(Accessory):
 		self.__dict__.update(state)
 		self._gpio_setup(self.pin)
 
+	def get_bulb(arg):
+		return isPowered
+
 	def set_bulb(self, value):
 		print("Setting bulb state to %s" % value)
+		global isPowered
+		isPowered = not isPowered
 
 	def stop(self):
 		super().stop()
